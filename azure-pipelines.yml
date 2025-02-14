@@ -1,0 +1,149 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: BuildSvelteKit
+  jobs:
+  - job: BuildDev
+    workspace:
+      clean: all
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+    - script: |
+        echo Building CIP Development SvelteKit
+        cp .env.dev .env
+        cp svelte.config.dev.js svelte.config.js
+        npm install --force
+        npm run build
+        npm ci --omit dev --force
+      displayName: 'SvelteKit Development install and build'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+            build/**
+            node_modules/**
+            package.json
+            package-lock.json
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy Dev SvelteKit files to staging directory'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: CIPFrontEndDev
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish Development SvelteKit artifact'
+
+  - job: BuildSBX
+    workspace:
+      clean: all
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+    - script: |
+        echo Building CIP SandBox SvelteKit
+        cp .env.sbx .env
+        cp svelte.config.sbx.js svelte.config.js
+        npm install --force
+        npm run build
+        npm ci --omit dev --force
+      displayName: 'SvelteKit Sandbox install and build'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+            build/**
+            node_modules/**
+            package.json
+            package-lock.json
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy Dev SvelteKit files to staging directory'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: CIPFrontEndSBX
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish SandBox SvelteKit artifact'
+
+  - job: BuildCMSBX
+    workspace:
+      clean: all
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+    - script: |
+        echo Building CashMax Sandbox SvelteKit
+        cp .env.cmsbx .env
+        cp svelte.config.sbx.js svelte.config.js
+        npm install --force
+        npm run build
+        npm ci --omit dev --force
+      displayName: 'SvelteKit CashMax Sandbox install and build'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+            build/**
+            node_modules/**
+            package.json
+            package-lock.json
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy CashMax SvelteKit files to staging directory'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: CIPFrontEndCMSBX
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish SandBox SvelteKit artifact'
+
+  - job: BuildChirpSBX
+    workspace:
+      clean: all
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+    - script: |
+        echo Building Staging SvelteKit
+        cp .env.chirp .env
+        cp svelte.config.sbx.js svelte.config.js
+        npm install --force
+        npm run build
+        npm ci --omit dev --force
+      displayName: 'SvelteKit Staging install and build'
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+            build/**
+            node_modules/**
+            package.json
+            package-lock.json
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy Staging SvelteKit files to staging directory'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: CIPFrontEndChirpSBX
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish Staging SvelteKit artifact'
