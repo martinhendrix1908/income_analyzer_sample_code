@@ -39,10 +39,3 @@ You can preview the production build with `npm run preview`.
 
 
 ## Environment Variables
-
-```
-SERVER_URL=https://apisbx.dmaassociatescorp.com/incomeanalyzer-sandbox
-PUBLIC_SERVER_URL=https://apisbx.dmaassociatescorp.com/incomeanalyzer-sandbox
-API_KEY=47cfee0f51274771ac12b4f24516aecf
-PUBLIC_API_KEY=47cfee0f51274771ac12b4f24516aecf
-```
